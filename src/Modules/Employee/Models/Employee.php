@@ -185,7 +185,6 @@ class Employee
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Agrupar por tienda
         $salaryByStore = [];
         foreach ($results as $row) {
             $storeName = $row['store_name'];

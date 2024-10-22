@@ -168,7 +168,6 @@ class EmployeeController
         }
     }
 
-    // Eliminar un empleado
     public function deleteEmployee(Request $request, Response $response, $args)
     {
         $id = $args['id'] ?? null;
