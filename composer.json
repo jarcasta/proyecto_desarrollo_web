@@ -1,0 +1,21 @@
+{
+    "name": "jarcasta/proyecto_desarollo_web",
+    "description": "Una aplicación básica con Slim Framework.",
+    "type": "project",
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.7",
+        "php-di/php-di": "^7.0",
+        "slim/twig-view": "^3.4",
+        "slim/php-view": "^3.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require-dev": {},
+    "scripts": {
+        "start": "php -S localhost:8080 -t public"
+    }
+}
