@@ -18,7 +18,8 @@ ob_start();
 
     <div class="mb-3">
         <label for="description" class="form-label">Descripción:</label>
-        <textarea class="form-control <?= isset($errors['description']) ? 'is-invalid' : '' ?>" id="description" name="description" rows="3" required><?= htmlspecialchars($achievement['description'] ?? '') ?></textarea>
+        <textarea class="form-control <?= isset($errors['description']) ? 'is-invalid' : '' ?>" 
+                  id="description" name="description" rows="3" required><?= htmlspecialchars($achievement['description'] ?? '') ?></textarea>
         <?php if (isset($errors['description'])): ?>
             <div class="invalid-feedback">
                 <?= htmlspecialchars($errors['description']) ?>
@@ -28,7 +29,8 @@ ob_start();
 
     <div class="mb-3">
         <label for="type" class="form-label">Tipo:</label>
-        <select class="form-select <?= isset($errors['type']) ? 'is-invalid' : '' ?>" id="type" name="type" required>
+        <select class="form-select <?= isset($errors['type']) ? 'is-invalid' : '' ?>" 
+                id="type" name="type" required>
             <option value="">Selecciona un tipo</option>
             <option value="positive" <?= (isset($achievement['type']) && $achievement['type'] === 'positive') ? 'selected' : '' ?>>Logro</option>
             <option value="negative" <?= (isset($achievement['type']) && $achievement['type'] === 'negative') ? 'selected' : '' ?>>Llamada de Atención</option>
@@ -42,7 +44,9 @@ ob_start();
 
     <div class="mb-3">
         <label for="occurrence_date" class="form-label">Fecha de Ocurrencia:</label>
-        <input type="text" class="form-control <?= isset($errors['occurrence_date']) ? 'is-invalid' : '' ?>" id="occurrence_date" name="occurrence_date" value="<?= htmlspecialchars($achievement['occurrence_date'] ?? '') ?>" required>
+        <input type="text" class="form-control <?= isset($errors['occurrence_date']) ? 'is-invalid' : '' ?>" 
+               id="occurrence_date" name="occurrence_date" 
+               value="<?= htmlspecialchars($achievement['occurrence_date'] ?? '') ?>" required>
         <?php if (isset($errors['occurrence_date'])): ?>
             <div class="invalid-feedback">
                 <?= htmlspecialchars($errors['occurrence_date']) ?>
@@ -52,10 +56,12 @@ ob_start();
 
     <div class="mb-3">
         <label for="employee_id" class="form-label">Empleado:</label>
-        <select class="form-select <?= isset($errors['employee_id']) ? 'is-invalid' : '' ?>" id="employee_id" name="employee_id" required>
+        <select class="form-select <?= isset($errors['employee_id']) ? 'is-invalid' : '' ?>" 
+                id="employee_id" name="employee_id" required>
             <option value="">Selecciona un empleado</option>
             <?php foreach ($employees as $employee): ?>
-                <option value="<?= htmlspecialchars($employee['id']) ?>" <?= (isset($achievement['employee_id']) && $achievement['employee_id'] == $employee['id']) ? 'selected' : '' ?>>
+                <option value="<?= htmlspecialchars($employee['id']) ?>" 
+                        <?= (isset($achievement['employee_id']) && $achievement['employee_id'] == $employee['id']) ? 'selected' : '' ?>>
                     <?= htmlspecialchars($employee['first_name'] . ' ' . $employee['last_name']) ?>
                 </option>
             <?php endforeach; ?>
@@ -73,21 +79,16 @@ ob_start();
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const dateInput = document.getElementById('occurrence_date');
+        var dateInput = document.getElementById('occurrence_date');
         if (dateInput) {
-            new tempusDominus.TempusDominus(dateInput, {
-                display: {
-                    components: {
-                        calendar: true,
-                        decades: true,
-                        month: true,
-                        year: true,
-                        clock: false
-                    }
-                },
-                localization: {
-                    format: 'yyyy-mm-dd'
-                }
+            flatpickr(dateInput, {
+                dateFormat: 'Y-m-d',
+                maxDate: 'today',
+                allowInput: true,
+                locale: 'es',
+                altInput: true,
+                altFormat: 'd/m/Y', 
+                disableMobile: true 
             });
         }
     });
