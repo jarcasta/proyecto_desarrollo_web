@@ -1,4 +1,6 @@
 <?php
+
+use Dompdf\Dompdf;
 use Slim\Views\PhpRenderer;
 use App\Modules\User\Models\User;
 use App\Modules\Position\Models\Position;
@@ -26,6 +28,12 @@ $container->set('db', function () {
     ];
 
     return new PDO($dsn, $user, $pass, $options);
+});
+
+$container->set('pdf', function () {
+    $dompdf = new Dompdf();
+    $dompdf->set_option('defaultFont', 'Arial');
+    return $dompdf;
 });
 
 $container->set('view_user', function () {
@@ -115,6 +123,7 @@ $container->set(DashboardController::class, function ($container) {
         $container->get(Employee::class),
         $container->get(Store::class),
         $container->get(Achievement::class),
-        $container->get('view_dashboard')
+        $container->get('view_dashboard'),
+        $container->get(Dompdf::class),
     );
 });

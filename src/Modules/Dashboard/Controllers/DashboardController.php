@@ -13,13 +13,15 @@ class DashboardController
     protected $storeModel;
     protected $achievementModel;
     protected $view;
+    protected $pdf;
 
-    public function __construct(Employee $employeeModel, Store $storeModel, Achievement $achievementModel, $view)
+    public function __construct(Employee $employeeModel, Store $storeModel, Achievement $achievementModel, $view, $pdf)
     {
         $this->employeeModel = $employeeModel;
         $this->storeModel = $storeModel;
         $this->achievementModel = $achievementModel;
         $this->view = $view;
+        $this->pdf = $pdf;
     }
 
     // Método para mostrar el dashboard
@@ -38,8 +40,6 @@ class DashboardController
         // d. Reportes de llamadas de atención de empleados
         $totalWarnings = $this->achievementModel->getTotalWarnings();
 
-        // e. Consulta en pantalla de empleados (puede incluirse en otro reporte o como detalle)
-
         // Pasar los datos a la vista del dashboard
         return $this->view->render($response, 'dashboard.php', [
             'totalEmployees' => $totalEmployees,
@@ -49,4 +49,33 @@ class DashboardController
             'totalWarnings' => $totalWarnings
         ]);
     }
+
+    // Método para generar PDF del Total de Empleados
+    public function generateEmployeesReportPDF(Request $request, Response $response, $args)
+    {
+        // Obtener todos los empleados
+        $employees = $this->employeeModel->getAll();
+
+        // Renderizar la vista HTML para el PDF
+        ob_start();
+        include __DIR__ . '/../Views/employees_report_pdf.php';
+        $html = ob_get_clean();
+
+        // Cargar HTML en dompdf
+        $this->pdf->loadHtml($html);
+
+        // (Opcional) Configurar el tamaño y orientación del papel
+        $this->pdf->setPaper('A4', 'portrait');
+
+        // Renderizar el PDF
+        $this->pdf->render();
+
+        // Salida del PDF al navegador
+        $this->pdf->stream("reporte_empleados_" . date('Ymd') . ".pdf", ["Attachment" => true]);
+
+        // Detener la ejecución para evitar que Slim continúe
+        exit;
+    }
+
+    // Métodos similares para otros reportes...
 }
