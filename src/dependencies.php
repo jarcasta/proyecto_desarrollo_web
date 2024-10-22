@@ -2,12 +2,10 @@
 
 use Dompdf\Dompdf;
 use Slim\Views\PhpRenderer;
-use App\Modules\User\Models\User;
 use App\Modules\Position\Models\Position;
 use App\Modules\Store\Models\Store;
 use App\Modules\Employee\Models\Employee;
 use App\Modules\Achievement\Models\Achievement;
-use App\Modules\User\Controllers\UserController;
 use App\Modules\Dashboard\Controllers\DashboardController;
 use App\Modules\Position\Controllers\PositionController;
 use App\Modules\Store\Controllers\StoreController;
@@ -36,10 +34,6 @@ $container->set('pdf', function () {
     return $dompdf;
 });
 
-$container->set('view_user', function () {
-    return new PhpRenderer(__DIR__ . '/Modules/User/Views/');
-});
-
 $container->set('view_position', function () {
     return new PhpRenderer(__DIR__ . '/Modules/Position/Views/');
 });
@@ -60,10 +54,6 @@ $container->set('view_dashboard', function () {
     return new PhpRenderer(__DIR__ . '/Modules/Dashboard/Views/');
 });
 
-$container->set(User::class, function ($container) {
-    return new User($container->get('db'));
-});
-
 $container->set(Position::class, function ($container) {
     return new Position($container->get('db'));
 });
@@ -78,13 +68,6 @@ $container->set(Employee::class, function ($container) {
 
 $container->set(Achievement::class, function ($container) {
     return new Achievement($container->get('db'));
-});
-
-$container->set(UserController::class, function ($container) {
-    return new UserController(
-        $container->get(User::class),
-        $container->get('view_user')
-    );
 });
 
 $container->set(PositionController::class, function ($container) {

@@ -7,7 +7,6 @@
 use Slim\App;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use App\Modules\User\Controllers\UserController;
 use App\Modules\Dashboard\Controllers\DashboardController;
 use App\Modules\Position\Controllers\PositionController;
 use App\Modules\Store\Controllers\StoreController;
@@ -16,7 +15,6 @@ use App\Modules\Achievement\Controllers\AchievementController;
 
 /** @var App $app */
 
-$userController = $container->get(UserController::class);
 $positionController = $container->get(PositionController::class);
 $storeController = $container->get(StoreController::class);
 $employeeController = $container->get(EmployeeController::class);
@@ -31,12 +29,6 @@ $app->get('/dashboard/pdf/salarios', [$dashboardController, 'generateSalaryRepor
 $app->get('/dashboard/pdf/logros', [$dashboardController, 'generateAchievementsReportPDF'])->setName('dashboard.pdf.logros');
 $app->get('/dashboard/pdf/llamadas', [$dashboardController, 'generateWarningsReportPDF'])->setName('dashboard.pdf.llamadas');
 
-$app->get('/usuarios', [$userController, 'listUsers']);
-$app->get('/usuario', [$userController, 'showUserForm']);
-$app->get('/usuario/{id}', [$userController, 'showUserForm']);
-$app->post('/usuario', [$userController, 'saveUser']);
-$app->post('/usuario/{id}', [$userController, 'saveUser']);
-$app->post('/usuario/eliminar/{id}', [$userController, 'deleteUser']);
 $app->get('/posiciones', [$positionController, 'listPositions']);
 $app->get('/posicion', [$positionController, 'showPositionForm']);
 $app->get('/posicion/{id}', [$positionController, 'showPositionForm']);

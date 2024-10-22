@@ -3,7 +3,6 @@
 
 <h2 class="mb-4"><?= $title ?></h2>
 
-<!-- Mostrar Mensajes de Error (si los hay) -->
 <?php if (isset($errors)): ?>
     <?php foreach ($errors as $error): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -29,7 +28,6 @@
 </form>
 
 <script>
-    // Ejemplo de validación de Bootstrap
     (function () {
         'use strict'
         var forms = document.querySelectorAll('.needs-validation')

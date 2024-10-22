@@ -2,7 +2,6 @@
 namespace App\Modules\Store\Models;
 
 use PDO;
-use PDOException;
 
 class Store
 {

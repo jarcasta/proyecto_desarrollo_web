@@ -36,10 +36,6 @@
                         <a class="nav-link <?= ($_SERVER['REQUEST_URI'] === '/') ? 'active' : '' ?>"
                             href="/">Dashboard</a>
                     </li>
-                    <!--<li class="nav-item">
-                        <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], '/usuarios') === 0) ? 'active' : '' ?>"
-                            href="/usuarios">Usuarios</a>
-                    </li> -->
                     <li class="nav-item">
                         <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], '/posiciones') === 0) ? 'active' : '' ?>"
                             href="/posiciones">Posiciones</a>

@@ -2,7 +2,6 @@
 namespace App\Modules\Position\Models;
 
 use PDO;
-use PDOException;
 
 class Position
 {

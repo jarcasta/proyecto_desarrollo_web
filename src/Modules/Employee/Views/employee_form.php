@@ -5,7 +5,6 @@ ob_start();
 
 <h2 class="mb-4"><?= htmlspecialchars($title) ?></h2>
 
-<!-- Mostrar Mensajes de Error (si los hay) -->
 <?php if (isset($errors) && !empty($errors)): ?>
     <?php foreach ($errors as $error): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -16,9 +15,6 @@ ob_start();
 <?php endif; ?>
 
 <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-    <!-- CSRF Tokens (si los has implementado) -->
-    <input type="hidden" name="<?= htmlspecialchars($csrf['name_key'] ?? '') ?>" value="<?= htmlspecialchars($csrf['name'] ?? '') ?>">
-    <input type="hidden" name="<?= htmlspecialchars($csrf['value_key'] ?? '') ?>" value="<?= htmlspecialchars($csrf['value'] ?? '') ?>">
 
     <div class="mb-3">
         <label for="first_name" class="form-label">Nombres:</label>
@@ -113,7 +109,6 @@ ob_start();
     <a href="/empleados" class="btn btn-secondary">Cancelar</a>
 </form>
 
-<!-- Inicializar Datepicker -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var dateInput = document.getElementById('date_of_birth');
@@ -127,7 +122,6 @@ ob_start();
         }
     });
 
-    // Validación de Formularios con Bootstrap
     (function () {
         'use strict'
         var forms = document.querySelectorAll('.needs-validation')

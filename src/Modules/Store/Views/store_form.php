@@ -28,7 +28,6 @@
 </form>
 
 <script>
-    // Ejemplo de validación de Bootstrap
     (function () {
         'use strict'
         var forms = document.querySelectorAll('.needs-validation')

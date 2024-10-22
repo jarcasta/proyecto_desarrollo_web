@@ -23,14 +23,12 @@ class EmployeeController
         $this->view = $view;
     }
 
-    // Lista de empleados
     public function listEmployees(Request $request, Response $response, $args)
     {
         $empleados = $this->employeeModel->getAll();
         return $this->view->render($response, 'employees.php', ['empleados' => $empleados]);
     }
 
-    // Mostrar formulario para crear o editar empleado
     public function showEmployeeForm(Request $request, Response $response, $args)
     {
         $id = $args['id'] ?? null;
@@ -45,7 +43,6 @@ class EmployeeController
             $data['empleado'] = $empleado;
         }
 
-        // Obtener posiciones y tiendas para los select
         $posiciones = $this->positionModel->getAll();
         $tiendas = $this->storeModel->getAll();
 
@@ -57,7 +54,6 @@ class EmployeeController
         ]);
     }
 
-    // Guardar un empleado (crear o actualizar)
     public function saveEmployee(Request $request, Response $response, $args)
     {
         $id = $args['id'] ?? null;
@@ -66,7 +62,6 @@ class EmployeeController
 
         $params = (array) $request->getParsedBody();
 
-        // Validaciones
         if (empty(trim($params['first_name'] ?? ''))) {
             $errors['first_name'] = 'El campo Nombre es obligatorio.';
         }
@@ -93,7 +88,6 @@ class EmployeeController
             $errors['store_id'] = 'El campo Tienda es obligatorio.';
         }
 
-        // Manejo de la fotografía
         $uploadedFiles = $request->getUploadedFiles();
         $photo = $uploadedFiles['photo'] ?? null;
         $photo_path = null;
@@ -108,7 +102,6 @@ class EmployeeController
         }
 
         if (!empty($errors)) {
-            // Obtener posiciones y tiendas para los select
             $posiciones = $this->positionModel->getAll();
             $tiendas = $this->storeModel->getAll();
 
@@ -137,7 +130,6 @@ class EmployeeController
         $salary = trim($params['salary']);
         $store_id = trim($params['store_id']);
 
-        // Si se subió una foto, incluirla en los datos
         if ($photo_path) {
             $data['photo_path'] = $photo_path;
         }
@@ -151,7 +143,6 @@ class EmployeeController
 
         try {
             if ($id) {
-                // Obtener la fotografía actual si no se actualiza
                 if (!$photo_path) {
                     $empleadoActual = $this->employeeModel->getById($id);
                     $data['photo_path'] = $empleadoActual['photo_path'];
@@ -165,7 +156,6 @@ class EmployeeController
         } catch (PDOException $e) {
             $errors['db'] = 'Error al guardar los datos: ' . $e->getMessage();
 
-            // Obtener posiciones y tiendas para los select
             $posiciones = $this->positionModel->getAll();
             $tiendas = $this->storeModel->getAll();
 
@@ -187,7 +177,6 @@ class EmployeeController
             try {
                 $empleado = $this->employeeModel->getById($id);
                 if ($empleado && $empleado['photo_path']) {
-                    // Eliminar la fotografía del servidor
                     $photoFullPath = __DIR__ . '/../../../public/' . $empleado['photo_path'];
                     if (file_exists($photoFullPath)) {
                         unlink($photoFullPath);
@@ -197,7 +186,6 @@ class EmployeeController
                 $this->employeeModel->delete($id);
                 return $response->withHeader('Location', '/empleados')->withStatus(302);
             } catch (PDOException $e) {
-                // Manejar errores si es necesario
                 return $response->withHeader('Location', '/empleados')->withStatus(302);
             }
         }
@@ -206,15 +194,11 @@ class EmployeeController
     }
 }
 
-// Función para mover archivos subidos de forma segura
 function moveUploadedFile($directory, $uploadedFile)
 {
     $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-    // Generar un nombre único para el archivo
-    $basename = bin2hex(random_bytes(8)); // 16 caracteres
+    $basename = bin2hex(random_bytes(8));
     $filename = sprintf('%s.%0.8s', $basename, $extension);
-
-    // Mover el archivo al directorio deseado
     $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
 
     return $filename;

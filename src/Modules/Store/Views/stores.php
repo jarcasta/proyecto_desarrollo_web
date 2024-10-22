@@ -1,7 +1,6 @@
 <?php $title = 'Lista de Tiendas'; ?>
 <?php ob_start(); ?>
 
-<!-- Mostrar Flash Messages -->
 <?php if (isset($flash['success'])): ?>
     <?php foreach ($flash['success'] as $message): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
