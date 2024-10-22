@@ -26,6 +26,7 @@ $app->get('/dashboard', [$dashboardController, 'showDashboard']);
 
 $app->get('/dashboard/pdf/empleados', [$dashboardController, 'generateEmployeesReportPDF'])->setName('dashboard.pdf.empleados');
 $app->get('/dashboard/pdf/salarios', [$dashboardController, 'generateSalaryReportPDF'])->setName('dashboard.pdf.salarios');
+$app->get('/dashboard/pdf/salarios_tienda', [$dashboardController, 'generateSalaryPerShopReportPDF'])->setName('dashboard.pdf.salarios_tienda');
 $app->get('/dashboard/pdf/logros', [$dashboardController, 'generateAchievementsReportPDF'])->setName('dashboard.pdf.logros');
 $app->get('/dashboard/pdf/llamadas', [$dashboardController, 'generateWarningsReportPDF'])->setName('dashboard.pdf.llamadas');
 

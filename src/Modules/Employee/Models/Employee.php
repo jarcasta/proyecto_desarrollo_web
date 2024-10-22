@@ -166,4 +166,42 @@ class Employee
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getSalaryByStoreDetailed()
+    {
+        $stmt = $this->db->prepare("
+            SELECT 
+                s.name as store_name,
+                e.first_name,
+                e.last_name,
+                e.salary
+            FROM 
+                employees e
+            JOIN 
+                stores s ON e.store_id = s.id
+            ORDER BY 
+                s.name ASC, e.salary DESC
+        ");
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Agrupar por tienda
+        $salaryByStore = [];
+        foreach ($results as $row) {
+            $storeName = $row['store_name'];
+            if (!isset($salaryByStore[$storeName])) {
+                $salaryByStore[$storeName] = [
+                    'store_name' => $storeName,
+                    'employees' => []
+                ];
+            }
+            $salaryByStore[$storeName]['employees'][] = [
+                'first_name' => $row['first_name'],
+                'last_name' => $row['last_name'],
+                'salary' => $row['salary']
+            ];
+        }
+
+        return $salaryByStore;
+    }
 }

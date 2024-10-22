@@ -6,6 +6,7 @@ use App\Modules\Store\Models\Store;
 use App\Modules\Achievement\Models\Achievement;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Dompdf\Dompdf;
 
 class DashboardController
 {
@@ -15,7 +16,7 @@ class DashboardController
     protected $view;
     protected $pdf;
 
-    public function __construct(Employee $employeeModel, Store $storeModel, Achievement $achievementModel, $view, $pdf)
+    public function __construct(Employee $employeeModel, Store $storeModel, Achievement $achievementModel, $view, Dompdf $pdf)
     {
         $this->employeeModel = $employeeModel;
         $this->storeModel = $storeModel;
@@ -24,23 +25,14 @@ class DashboardController
         $this->pdf = $pdf;
     }
 
-    // Método para mostrar el dashboard
     public function showDashboard(Request $request, Response $response, $args)
     {
-        // a. Lista general de empleados
         $totalEmployees = $this->employeeModel->getTotalEmployees();
         $totalSalary = $this->employeeModel->getTotalSalary();
-
-        // b. Lista de salarios de empleados por tienda
         $salaryByStore = $this->employeeModel->getSalaryByStore();
-
-        // c. Reportes de logros de empleados
         $totalAchievements = $this->achievementModel->getTotalAchievements();
-
-        // d. Reportes de llamadas de atención de empleados
         $totalWarnings = $this->achievementModel->getTotalWarnings();
 
-        // Pasar los datos a la vista del dashboard
         return $this->view->render($response, 'dashboard.php', [
             'totalEmployees' => $totalEmployees,
             'totalSalary' => $totalSalary,
@@ -50,32 +42,114 @@ class DashboardController
         ]);
     }
 
-    // Método para generar PDF del Total de Empleados
     public function generateEmployeesReportPDF(Request $request, Response $response, $args)
     {
-        // Obtener todos los empleados
-        $employees = $this->employeeModel->getAll();
+        try {
+            $employees = $this->employeeModel->getAll();
 
-        // Renderizar la vista HTML para el PDF
-        ob_start();
-        include __DIR__ . '/../Views/employees_report_pdf.php';
-        $html = ob_get_clean();
+            ob_start();
+            include __DIR__ . '/../Views/employees_report_pdf.php';
+            $html = ob_get_clean();
 
-        // Cargar HTML en dompdf
-        $this->pdf->loadHtml($html);
+            $this->pdf->loadHtml($html);
+            $this->pdf->setPaper('A4', 'portrait');
+            $this->pdf->render();
+            $this->pdf->stream("reporte_empleados_" . date('Ymd') . ".pdf", ["Attachment" => true]);
 
-        // (Opcional) Configurar el tamaño y orientación del papel
-        $this->pdf->setPaper('A4', 'portrait');
-
-        // Renderizar el PDF
-        $this->pdf->render();
-
-        // Salida del PDF al navegador
-        $this->pdf->stream("reporte_empleados_" . date('Ymd') . ".pdf", ["Attachment" => true]);
-
-        // Detener la ejecución para evitar que Slim continúe
-        exit;
+            exit;
+        } catch (\Exception $e) {
+            error_log("Error generando PDF de empleados: " . $e->getMessage());
+            $response->getBody()->write("Ocurrió un error al generar el PDF. Por favor, intenta nuevamente más tarde.");
+            return $response->withStatus(500);
+        }
     }
 
-    // Métodos similares para otros reportes...
+    public function generateSalaryReportPDF(Request $request, Response $response, $args)
+    {
+        try {
+            $totalSalary = $this->employeeModel->getTotalSalary();
+
+            ob_start();
+            include __DIR__ . '/../Views/salary_report_pdf.php';
+            $html = ob_get_clean();
+
+            $this->pdf->loadHtml($html);
+            $this->pdf->setPaper('A4', 'portrait');
+            $this->pdf->render();
+            $this->pdf->stream("reporte_salario_total_" . date('Ymd') . ".pdf", ["Attachment" => true]);
+
+            exit;
+        } catch (\Exception $e) {
+            error_log("Error generando PDF de salarios: " . $e->getMessage());
+            $response->getBody()->write("Ocurrió un error al generar el PDF. Por favor, intenta nuevamente más tarde.");
+            return $response->withStatus(500);
+        }
+    }
+
+    // Método para generar PDF de Salarios por Tienda
+    public function generateSalaryPerShopReportPDF(Request $request, Response $response, $args)
+    {
+        try {
+            $salaryByStore = $this->employeeModel->getSalaryByStoreDetailed();
+
+            ob_start();
+            include __DIR__ . '/../Views/salary_per_shop_report_pdf.php';
+            $html = ob_get_clean();
+
+            $this->pdf->loadHtml($html);
+            $this->pdf->setPaper('A4', 'portrait');
+            $this->pdf->render();
+            $this->pdf->stream("reporte_salarios_por_tienda_" . date('Ymd') . ".pdf", ["Attachment" => true]);
+
+            exit;
+        } catch (\Exception $e) {
+            error_log("Error generando PDF de salarios por tienda: " . $e->getMessage());
+            $response->getBody()->write("Ocurrió un error al generar el PDF. Por favor, intenta nuevamente más tarde.");
+            return $response->withStatus(500);
+        }
+    }
+
+    public function generateAchievementsReportPDF(Request $request, Response $response, $args)
+    {
+        try {
+            $achievements = $this->achievementModel->getAchievementsByType('positive');
+
+            ob_start();
+            include __DIR__ . '/../Views/achievements_report_pdf.php';
+            $html = ob_get_clean();
+
+            $this->pdf->loadHtml($html);
+            $this->pdf->setPaper('A4', 'portrait');
+            $this->pdf->render();
+            $this->pdf->stream("reporte_logros_" . date('Ymd') . ".pdf", ["Attachment" => true]);
+
+            exit;
+        } catch (\Exception $e) {
+            error_log("Error generando PDF de logros: " . $e->getMessage());
+            $response->getBody()->write("Ocurrió un error al generar el PDF. Por favor, intenta nuevamente más tarde.");
+            return $response->withStatus(500);
+        }
+    }
+
+    public function generateWarningsReportPDF(Request $request, Response $response, $args)
+    {
+        try {
+            $warnings = $this->achievementModel->getAchievementsByType('negative');
+
+            ob_start();
+            include __DIR__ . '/../Views/warnings_report_pdf.php';
+            $html = ob_get_clean();
+
+            $this->pdf->loadHtml($html);
+            $this->pdf->setPaper('A4', 'portrait');
+            $this->pdf->render();
+            $this->pdf->stream("reporte_llamadas_atencion_" . date('Ymd') . ".pdf", ["Attachment" => true]);
+
+            exit;
+        } catch (\Exception $e) {
+            error_log("Error generando PDF de llamadas de atención: " . $e->getMessage());
+            $response->getBody()->write("Ocurrió un error al generar el PDF. Por favor, intenta nuevamente más tarde.");
+            return $response->withStatus(500);
+        }
+    }
 }

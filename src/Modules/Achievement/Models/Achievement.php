@@ -2,7 +2,6 @@
 namespace App\Modules\Achievement\Models;
 
 use PDO;
-use PDOException;
 
 class Achievement
 {
@@ -13,7 +12,6 @@ class Achievement
         $this->db = $db;
     }
 
-    // Obtener todos los logros y llamadas de atención con detalles de empleados
     public function getAll()
     {
         $stmt = $this->db->prepare("
@@ -36,7 +34,6 @@ class Achievement
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Obtener un logro o llamada de atención por ID
     public function getById($id)
     {
         $stmt = $this->db->prepare("
@@ -51,7 +48,6 @@ class Achievement
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Crear un nuevo logro o llamada de atención
     public function create($data)
     {
         $stmt = $this->db->prepare("
@@ -66,7 +62,6 @@ class Achievement
         ]);
     }
 
-    // Actualizar un logro o llamada de atención existente
     public function update($id, $data)
     {
         $stmt = $this->db->prepare("
@@ -83,7 +78,6 @@ class Achievement
         ]);
     }
 
-    // Eliminar un logro o llamada de atención
     public function delete($id)
     {
         $stmt = $this->db->prepare("
@@ -93,7 +87,6 @@ class Achievement
         return $stmt->execute([$id]);
     }
 
-    // Obtener el total de logros
     public function getTotalAchievements()
     {
         $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM achievements WHERE type = 'positive'");
@@ -102,10 +95,55 @@ class Achievement
         return $result['total'] ?? 0;
     }
 
-    // Obtener el total de llamadas de atención
     public function getTotalWarnings()
     {
         $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM achievements WHERE type = 'negative'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    public function getAchievementsByType($type)
+    {
+        $allowedTypes = ['positive', 'negative'];
+
+        if (!in_array($type, $allowedTypes)) {
+            throw new \InvalidArgumentException("Tipo de logro inválido. Tipos permitidos: 'positive', 'negative'.");
+        }
+
+        $stmt = $this->db->prepare("
+            SELECT 
+                a.*, 
+                e.first_name, 
+                e.last_name 
+            FROM 
+                achievements a
+            JOIN 
+                employees e ON a.employee_id = e.id
+            WHERE 
+                a.type = :type
+            ORDER BY 
+                a.occurrence_date DESC
+        ");
+        $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTotalAchievementsByType($type)
+    {
+        $allowedTypes = ['positive', 'negative'];
+
+        if (!in_array($type, $allowedTypes)) {
+            throw new \InvalidArgumentException("Tipo de logro inválido. Tipos permitidos: 'positive', 'negative'.");
+        }
+
+        $stmt = $this->db->prepare("
+            SELECT COUNT(*) as total 
+            FROM achievements 
+            WHERE type = :type
+        ");
+        $stmt->bindParam(':type', $type, PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['total'] ?? 0;

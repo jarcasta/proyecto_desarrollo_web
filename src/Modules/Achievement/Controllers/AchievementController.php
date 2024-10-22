@@ -19,14 +19,12 @@ class AchievementController
         $this->view = $view;
     }
 
-    // Lista de logros y llamadas de atención
     public function listAchievements(Request $request, Response $response, $args)
     {
         $achievements = $this->achievementModel->getAll();
         return $this->view->render($response, 'achievements.php', ['achievements' => $achievements]);
     }
 
-    // Mostrar formulario para crear o editar logro/llamada de atención
     public function showAchievementForm(Request $request, Response $response, $args)
     {
         $id = $args['id'] ?? null;
@@ -41,7 +39,6 @@ class AchievementController
             $data['achievement'] = $achievement;
         }
 
-        // Obtener empleados para el select
         $employees = $this->employeeModel->getAll();
 
         return $this->view->render($response, 'achievement_form.php', [
@@ -51,7 +48,6 @@ class AchievementController
         ]);
     }
 
-    // Guardar un logro o llamada de atención (crear o actualizar)
     public function saveAchievement(Request $request, Response $response, $args)
     {
         $id = $args['id'] ?? null;
@@ -60,7 +56,6 @@ class AchievementController
 
         $params = (array) $request->getParsedBody();
 
-        // Validaciones
         if (empty(trim($params['description'] ?? ''))) {
             $errors['description'] = 'El campo Descripción es obligatorio.';
         }
@@ -80,7 +75,6 @@ class AchievementController
         }
 
         if (!empty($errors)) {
-            // Obtener empleados para el select
             $employees = $this->employeeModel->getAll();
 
             $data['errors'] = $errors;
@@ -119,7 +113,6 @@ class AchievementController
         } catch (\PDOException $e) {
             $errors['db'] = 'Error al guardar los datos: ' . $e->getMessage();
 
-            // Obtener empleados para el select
             $employees = $this->employeeModel->getAll();
 
             return $this->view->render($response, 'achievement_form.php', [
@@ -130,7 +123,6 @@ class AchievementController
         }
     }
 
-    // Eliminar un logro o llamada de atención
     public function deleteAchievement(Request $request, Response $response, $args)
     {
         $id = $args['id'] ?? null;
@@ -140,7 +132,6 @@ class AchievementController
                 $this->achievementModel->delete($id);
                 return $response->withHeader('Location', '/achievements')->withStatus(302);
             } catch (\PDOException $e) {
-                // Manejar errores si es necesario
                 return $response->withHeader('Location', '/achievements')->withStatus(302);
             }
         }
