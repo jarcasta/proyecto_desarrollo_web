@@ -1,7 +1,6 @@
 <?php $title = 'Logros y Llamadas de Atención'; ?>
 <?php ob_start(); ?>
 
-<!-- Mostrar Flash Messages -->
 <?php if (isset($flash['success'])): ?>
     <?php foreach ($flash['success'] as $message): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -51,9 +50,6 @@
                     <i class="bi bi-pencil-square"></i> Editar
                 </a>
                 <form id="delete-form-<?= $achievement['id'] ?>" method="post" action="/achievement/eliminar/<?= $achievement['id'] ?>" style="display:inline;">
-                    <!-- CSRF Tokens (si los has implementado) -->
-                    <input type="hidden" name="<?= htmlspecialchars($csrf['name_key'] ?? '') ?>" value="<?= htmlspecialchars($csrf['name'] ?? '') ?>">
-                    <input type="hidden" name="<?= htmlspecialchars($csrf['value_key'] ?? '') ?>" value="<?= htmlspecialchars($csrf['value'] ?? '') ?>">
                     <button type="button" class="btn btn-sm btn-danger" onclick="confirmDeletion('delete-form-<?= $achievement['id'] ?>')">
                         <i class="bi bi-trash"></i> Eliminar
                     </button>
@@ -64,7 +60,6 @@
     </tbody>
 </table>
 
-<!-- Modal para Confirmar Eliminación -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

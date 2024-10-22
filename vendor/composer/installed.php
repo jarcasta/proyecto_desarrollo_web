@@ -3,7 +3,7 @@
         'name' => 'jarcasta/proyecto_desarollo_web',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '0879d2c18363f8b3c906f579324246ce4b08e1cf',
+        'reference' => 'f6f32e7bfaef5d6d9bdedbab2ce64c144b038ebd',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -49,7 +49,7 @@
         'jarcasta/proyecto_desarollo_web' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '0879d2c18363f8b3c906f579324246ce4b08e1cf',
+            'reference' => 'f6f32e7bfaef5d6d9bdedbab2ce64c144b038ebd',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

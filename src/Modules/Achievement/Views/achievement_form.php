@@ -5,7 +5,6 @@ ob_start();
 
 <h2 class="mb-4"><?= htmlspecialchars($title) ?></h2>
 
-<!-- Mostrar Mensajes de Error (si los hay) -->
 <?php if (isset($errors) && !empty($errors)): ?>
     <?php foreach ($errors as $error): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -16,9 +15,6 @@ ob_start();
 <?php endif; ?>
 
 <form method="post" class="needs-validation" novalidate>
-    <!-- CSRF Tokens (si los has implementado) -->
-    <input type="hidden" name="<?= htmlspecialchars($csrf['name_key'] ?? '') ?>" value="<?= htmlspecialchars($csrf['name'] ?? '') ?>">
-    <input type="hidden" name="<?= htmlspecialchars($csrf['value_key'] ?? '') ?>" value="<?= htmlspecialchars($csrf['value'] ?? '') ?>">
 
     <div class="mb-3">
         <label for="description" class="form-label">Descripción:</label>
@@ -75,7 +71,6 @@ ob_start();
     <a href="/achievements" class="btn btn-secondary">Cancelar</a>
 </form>
 
-<!-- Inicializar Datepicker -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const dateInput = document.getElementById('occurrence_date');
@@ -97,7 +92,6 @@ ob_start();
         }
     });
 
-    // Validación de Formularios con Bootstrap
     (function () {
         'use strict'
         var forms = document.querySelectorAll('.needs-validation')

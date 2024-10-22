@@ -8,7 +8,7 @@ ob_start();
 <div class="row">
     <div class="col-md-4">
         <div class="card text-bg-primary mb-3">
-            <div class="card-header">Total de Empleados</div>
+            <div class="card-header">Lista general de empleados</div>
             <div class="card-body">
                 <h5 class="card-title"><?= htmlspecialchars($totalEmployees) ?></h5>
                 <p class="card-text">Cantidad total de empleados registrados.</p>
@@ -19,34 +19,20 @@ ob_start();
     </div>
 
     <div class="col-md-4">
-        <div class="card text-bg-success mb-3">
-            <div class="card-header">Salario Total</div>
-            <div class="card-body">
-                <h5 class="card-title">$<?= number_format($totalSalary, 2) ?></h5>
-                <p class="card-text">Suma total de los salarios de todos los empleados.</p>
-                <a href="/empleados" class="btn btn-light">Ver Detalles</a>
-                <a href="/dashboard/pdf/salarios" class="btn btn-secondary">Generar PDF</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
         <div class="card text-bg-warning mb-3">
-            <div class="card-header">Salarios por Tienda</div>
+            <div class="card-header">Lista de salarios de empleado por tienda</div>
             <div class="card-body">
                 <h5 class="card-title"><?= count($salaryByStore) ?> Tiendas</h5>
                 <p class="card-text">Salarios de empleados agrupados por tienda.</p>
-                <a href="/empleados" class="btn btn-light">Ver Salarios</a>
+                <a href="/tiendas" class="btn btn-light">Ver tiendas</a>
                 <a href="/dashboard/pdf/salarios_tienda" class="btn btn-secondary">Generar PDF</a>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
     <div class="col-md-4">
         <div class="card text-bg-info mb-3">
-            <div class="card-header">Total de Logros</div>
+            <div class="card-header">Reporte de logros de empleados</div>
             <div class="card-body">
                 <h5 class="card-title"><?= htmlspecialchars($totalAchievements) ?></h5>
                 <p class="card-text">Cantidad total de logros positivos registrados.</p>
@@ -55,10 +41,12 @@ ob_start();
             </div>
         </div>
     </div>
+</div>
 
+<div class="row">
     <div class="col-md-4">
         <div class="card text-bg-danger mb-3">
-            <div class="card-header">Total de Llamadas de Atención</div>
+            <div class="card-header">Reporte de llamadas de atención de empleados</div>
             <div class="card-body">
                 <h5 class="card-title"><?= htmlspecialchars($totalWarnings) ?></h5>
                 <p class="card-text">Cantidad total de llamadas de atención negativas registradas.</p>
@@ -70,7 +58,7 @@ ob_start();
 
     <div class="col-md-4">
         <div class="card text-bg-secondary mb-3">
-            <div class="card-header">Consulta de Empleados</div>
+            <div class="card-header">Consulta en pantalla de empleados</div>
             <div class="card-body">
                 <h5 class="card-title">Buscar Empleado</h5>
                 <p class="card-text">Consulta información detallada de un empleado en particular.</p>

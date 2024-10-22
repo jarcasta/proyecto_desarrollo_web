@@ -41,21 +41,21 @@ class DashboardController
             'totalWarnings' => $totalWarnings
         ]);
     }
-
     public function generateEmployeesReportPDF(Request $request, Response $response, $args)
     {
         try {
             $employees = $this->employeeModel->getAll();
-
+            $totalSalary = array_sum(array_column($employees, 'salary'));
+    
             ob_start();
             include __DIR__ . '/../Views/employees_report_pdf.php';
             $html = ob_get_clean();
-
+    
             $this->pdf->loadHtml($html);
             $this->pdf->setPaper('A4', 'portrait');
             $this->pdf->render();
             $this->pdf->stream("reporte_empleados_" . date('Ymd') . ".pdf", ["Attachment" => true]);
-
+    
             exit;
         } catch (\Exception $e) {
             error_log("Error generando PDF de empleados: " . $e->getMessage());
@@ -64,29 +64,6 @@ class DashboardController
         }
     }
 
-    public function generateSalaryReportPDF(Request $request, Response $response, $args)
-    {
-        try {
-            $totalSalary = $this->employeeModel->getTotalSalary();
-
-            ob_start();
-            include __DIR__ . '/../Views/salary_report_pdf.php';
-            $html = ob_get_clean();
-
-            $this->pdf->loadHtml($html);
-            $this->pdf->setPaper('A4', 'portrait');
-            $this->pdf->render();
-            $this->pdf->stream("reporte_salario_total_" . date('Ymd') . ".pdf", ["Attachment" => true]);
-
-            exit;
-        } catch (\Exception $e) {
-            error_log("Error generando PDF de salarios: " . $e->getMessage());
-            $response->getBody()->write("Ocurrió un error al generar el PDF. Por favor, intenta nuevamente más tarde.");
-            return $response->withStatus(500);
-        }
-    }
-
-    // Método para generar PDF de Salarios por Tienda
     public function generateSalaryPerShopReportPDF(Request $request, Response $response, $args)
     {
         try {
@@ -108,7 +85,7 @@ class DashboardController
             return $response->withStatus(500);
         }
     }
-
+    
     public function generateAchievementsReportPDF(Request $request, Response $response, $args)
     {
         try {
